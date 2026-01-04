@@ -1,0 +1,21 @@
+/* Додаємо посилання на основний файл зі стилями Tailwind */
+@reference "./index.css";
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top center, #18181b 0%, #09090b 100%);
+  padding: 2rem;
+}
+
+.card {
+  @apply bg-zinc-900 border border-zinc-800 rounded-xl p-6 shadow-2xl;
+  transition: border-color 0.3s ease;
+}
+
+.card:hover {
+  @apply border-zinc-700;
+}

@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  /* Тут можна налаштувати власні кольори, якщо стандартних замало */
+  --color-brand-dark: #0a0a0a;
+  --color-brand-gray: #171717;
+}
+
+@layer base {
+  body {
+    /* Використовуємо zinc-950 для глибокого темно-сірого/чорного */
+    @apply bg-zinc-950 text-zinc-100 antialiased;
+    margin: 0;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  }
+
+  html {
+    /* Забезпечуємо чорний фон при скролі на iOS та плавний скрол */
+    background-color: #09090b;
+    color-scheme: dark;
+  }
+}

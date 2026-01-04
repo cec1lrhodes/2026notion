@@ -1,0 +1,87 @@
+@reference "../../index.css";
+
+/* Головний контейнер компонента */
+.notion-container {
+  @apply w-full max-w-4xl mx-auto py-10 px-4 flex flex-col gap-8;
+}
+
+/* --- Стилі панелі вводу (Input Bar) --- */
+
+.input-bar-wrapper {
+  /* Flex контейнер, темний фон, рамка, заокруглення */
+  @apply flex items-end gap-2 p-2;
+  @apply bg-zinc-900 border border-zinc-800 rounded-2xl shadow-lg;
+  @apply transition-colors duration-300;
+}
+
+/* Ефект при наведенні на всю панель - легке підсвічування рамки */
+.input-bar-wrapper:focus-within,
+.input-bar-wrapper:hover {
+  @apply border-zinc-700;
+}
+
+/* Контейнер для textarea, щоб вона займала весь доступний простір */
+.textarea-container {
+  @apply flex-1 py-2;
+}
+
+.styled-textarea {
+  /* Прозорий фон, без рамок, без ресайзу */
+  @apply w-full bg-transparent text-zinc-100 outline-none resize-none border-none;
+  @apply text-lg leading-relaxed placeholder:text-zinc-600;
+  /* Важливо: приховуємо скроллбар, але дозволяємо скрол, якщо тексту багато */
+  @apply overflow-hidden;
+  /* Мінімальна висота одного рядка */
+  min-height: 28px;
+  /* Плавна зміна висоти (якщо будете робити авто-ресайз JS-ом) */
+  transition: height 0.1s ease-out;
+}
+
+/* --- Стилі кнопок (+ і стрілка) --- */
+
+.icon-button {
+  /* Квадратна форма, центрування контенту */
+  @apply flex items-center justify-center h-12 w-12 rounded-xl;
+  @apply bg-zinc-800 text-zinc-400 cursor-pointer;
+  @apply transition-all duration-200 active:scale-95;
+
+  @apply disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100;
+}
+
+.icon-button:hover:not(:disabled) {
+  @apply bg-zinc-700 text-zinc-200;
+}
+/* Специфічний стиль для бічних кнопок, щоб вони не стискалися */
+.side-button {
+  @apply shrink-0;
+}
+
+/* --- Стилі сітки результатів (Grid) --- */
+
+.results-grid {
+  /* Сітка: 1 колонка на моб., 3 колонки на десктопі */
+  @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+}
+
+.result-card {
+  /* Картка: темний фон, рамка, заокруглення, overflow-hidden для картинки */
+  @apply bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden;
+  @apply cursor-pointer transition-all duration-300;
+}
+
+/* Ефект наведення на картку - підсвічування рамки і легкий зсув вгору */
+.result-card:hover {
+  @apply border-zinc-600 -translate-y-1 shadow-xl;
+}
+
+/* Верхня частина картки (заглушка SVG) */
+.card-image-placeholder {
+  /* Співвідношення сторін 16:9 */
+  @apply aspect-video w-full bg-zinc-950 flex items-center justify-center;
+  @apply text-zinc-600 font-medium border-b border-zinc-800;
+}
+
+/* Нижня частина картки (опис) */
+.card-description {
+  @apply p-4 text-sm text-zinc-400;
+}
