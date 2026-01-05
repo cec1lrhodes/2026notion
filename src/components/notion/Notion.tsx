@@ -25,9 +25,22 @@ const Notion = () => {
     setData("");
   };
 
+  const deleteArticle = (id: number | string) => {
+    setArticles((prevArticles) =>
+      prevArticles.filter((article) => article.id !== id)
+    );
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setData(e.target.value);
     console.log(data);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      addArticle();
+    }
   };
 
   return (
@@ -48,6 +61,7 @@ const Notion = () => {
             rows={1}
             onChange={handleChange}
             value={data}
+            onKeyDown={handleKeyDown}
           />
         </div>
 
@@ -65,7 +79,13 @@ const Notion = () => {
       <div className="results-grid">
         {articles.map((item) => (
           // Клікабельний елемент (картка)
-          <div key={item.id} className="result-card">
+          <div key={item.id} className="result-card group relative">
+            <button
+              className="delete-btn"
+              onClick={() => deleteArticle(item.id)}
+            >
+              <span>X</span>
+            </button>
             {/* Верхня частина: SVG заглушка */}
             <div className="card-image-placeholder">
               <span>SVG image</span>

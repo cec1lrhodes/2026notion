@@ -85,3 +85,14 @@
 .card-description {
   @apply p-4 text-sm text-zinc-400;
 }
+.delete-btn {
+  /* Ми беремо всі ваші класи і групуємо їх тут */
+  @apply absolute top-2 right-2 p-1 bg-red-900/20 text-red-500 rounded-md;
+  @apply opacity-0 transition-opacity duration-200 cursor-pointer;
+  @apply hover:bg-red-500 hover:text-white;
+
+  /* Цей клас спрацює, бо на батьківській картці є клас 'group' */
+  .group:hover & {
+    @apply opacity-100;
+  }
+}
