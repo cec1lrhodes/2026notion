@@ -1,4 +1,5 @@
 import React from "react";
+import { memo } from "react";
 
 interface NotionInputBarProps {
   value: string;
@@ -8,41 +9,37 @@ interface NotionInputBarProps {
   disabled: boolean;
 }
 
-export const NotionInputBar: React.FC<NotionInputBarProps> = ({
-  value,
-  onChange,
-  onKeyDown,
-  onSubmit,
-  disabled,
-}) => {
-  return (
-    <div className="input-bar-wrapper">
-      {/* Кнопка 1: Додати SVG */}
-      <button className="icon-button side-button">
-        <span className="text-2xl leading-none relative top-[-1px]">+</span>
-      </button>
+export const NotionInputBar = memo(
+  ({ value, onChange, onKeyDown, onSubmit, disabled }: NotionInputBarProps) => {
+    return (
+      <div className="input-bar-wrapper">
+        {/* Кнопка 1: Додати SVG */}
+        <button className="icon-button side-button">
+          <span className="text-2xl leading-none relative top-[-1px]">+</span>
+        </button>
 
-      {/* Центральна частина: Textarea */}
-      <div className="textarea-container">
-        <textarea
-          className="styled-textarea"
-          placeholder="Введіть ваш текст..."
-          spellCheck="false"
-          rows={1}
-          onChange={onChange}
-          value={value}
-          onKeyDown={onKeyDown}
-        />
+        {/* Центральна частина: Textarea */}
+        <div className="textarea-container">
+          <textarea
+            className="styled-textarea"
+            placeholder="Введіть ваш текст..."
+            spellCheck="false"
+            rows={1}
+            onChange={onChange}
+            value={value}
+            onKeyDown={onKeyDown}
+          />
+        </div>
+
+        {/* Кнопка 3: Відправити */}
+        <button
+          className="icon-button side-button"
+          onClick={onSubmit}
+          disabled={disabled}
+        >
+          <span>↑</span>
+        </button>
       </div>
-
-      {/* Кнопка 3: Відправити */}
-      <button
-        className="icon-button side-button"
-        onClick={onSubmit}
-        disabled={disabled}
-      >
-        <span>↑</span>
-      </button>
-    </div>
-  );
-};
+    );
+  }
+);

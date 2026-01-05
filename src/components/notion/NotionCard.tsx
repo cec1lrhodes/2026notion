@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { type Article } from "./types/type";
 
 interface NotionCardProps {
@@ -20,4 +20,4 @@ const NotionCard: React.FC<NotionCardProps> = ({ item, onDelete }) => (
   </div>
 );
 
-export default NotionCard;
+export default memo(NotionCard);
