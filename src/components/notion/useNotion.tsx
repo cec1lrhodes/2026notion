@@ -1,43 +1,35 @@
-import {
-  useCallback,
-  useEffect,
-  useState,
-  type ChangeEvent,
-  type KeyboardEvent,
-} from "react";
-import { type Article } from "./types/type";
+import { useCallback, useEffect, useState } from "react";
+import { type Card } from "./types/type";
 
 const STORAGE_KEY = "notion_articles";
 
 export const useNotion = () => {
   const [data, setData] = useState<string>("");
 
-  const [articles, setArticles] = useState<Article[]>(() => {
+  const [cards, setCards] = useState<Card[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(articles));
-  }, [articles]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+  }, [cards]);
 
-  const addArticle = useCallback(() => {
+  const addCard = useCallback(() => {
     if (data.trim() === "") return;
 
-    const newArticle: Article = {
+    const newCard: Card = {
       id: crypto.randomUUID(),
       text: data,
       svg: undefined,
     };
-    // setArticles([newArticle, ...articles]); при цьому варіанті потрібно додавати articles в залежності, що несе за собою ререндер
-    setArticles((prev) => [newArticle, ...prev]);
+    // setCard([newCard, ...card]); при цьому варіанті потрібно додавати card в залежності, що несе за собою ререндер
+    setCards((prev) => [newCard, ...prev]);
     setData("");
   }, [data]);
 
-  const deleteArticle = useCallback((id: number | string) => {
-    setArticles((prevArticles) =>
-      prevArticles.filter((article) => article.id !== id)
-    );
+  const deleteCard = useCallback((id: number | string) => {
+    setCards((prevCard) => prevCard.filter((card) => card.id !== id));
   }, []);
 
   const handleChange = useCallback(
@@ -51,18 +43,18 @@ export const useNotion = () => {
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        addArticle();
+        addCard();
       }
     },
-    [addArticle]
+    [addCard]
   );
 
   return {
     data,
-    articles,
+    cards,
     handleChange,
     handleKeyDown,
-    addArticle,
-    deleteArticle,
+    addCard,
+    deleteCard,
   };
 };

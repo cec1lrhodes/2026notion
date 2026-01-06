@@ -1,8 +1,8 @@
 import React, { memo } from "react";
-import { type Article } from "./types/type";
+import { type Card } from "./types/type";
 
 interface NotionCardProps {
-  item: Article;
+  item: Card;
   onDelete: (id: string) => void;
 }
 
