@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { type Card } from "./types/type";
+import { type Card } from "../notion/types/type";
 
 const STORAGE_KEY = "notion_articles";
 

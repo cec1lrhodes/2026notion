@@ -1,5 +1,5 @@
 import "./Notion.css";
-import { useNotion } from "./useNotion";
+import { useNotion } from "../hooks/useNotion";
 import { NotionInputBar } from "./NotionInputBar";
 import { NotionGrid } from "./NotionGrid";
 
