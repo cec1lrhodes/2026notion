@@ -2,18 +2,18 @@
 
 /* Головний контейнер компонента */
 .notion-container {
-  @apply w-full max-w-4xl mx-auto py-10 px-4 flex flex-col gap-8;
+  /* w-full гарантує, що контейнер не буде вузьким */
+  @apply w-full max-w-5xl mx-auto px-4 flex flex-col gap-10;
 }
-
 /* --- Стилі панелі вводу (Input Bar) --- */
 
 .input-bar-wrapper {
-  /* Flex контейнер, темний фон, рамка, заокруглення */
-  @apply flex items-end gap-2 p-2;
-  @apply bg-zinc-900 border border-zinc-800 rounded-2xl shadow-lg;
-  @apply transition-colors duration-300;
+  @apply flex items-end gap-3 p-4;
+  /* Прибираємо важку тінь і робимо фон ледь помітним, щоб не було "силуету" */
+  @apply bg-zinc-900/20 border border-zinc-800/50 rounded-2xl;
+  @apply transition-all duration-300;
+  width: 100%;
 }
-
 /* Ефект при наведенні на всю панель - легке підсвічування рамки */
 .input-bar-wrapper:focus-within,
 .input-bar-wrapper:hover {
@@ -22,29 +22,25 @@
 
 /* Контейнер для textarea, щоб вона займала весь доступний простір */
 .textarea-container {
-  @apply flex-1 py-2;
+  @apply flex-1;
 }
 
 .styled-textarea {
-  /* Прозорий фон, без рамок, без ресайзу */
+  /* w-full тут критично важливий для статичної ширини */
   @apply w-full bg-transparent text-zinc-100 outline-none resize-none border-none;
-  @apply text-lg leading-relaxed placeholder:text-zinc-600;
-  /* Важливо: приховуємо скроллбар, але дозволяємо скрол, якщо тексту багато */
-  @apply overflow-hidden;
-  /* Мінімальна висота одного рядка */
-  min-height: 28px;
-  /* Плавна зміна висоти (якщо будете робити авто-ресайз JS-ом) */
-  transition: height 0.1s ease-out;
+  @apply text-xl leading-relaxed placeholder:text-zinc-700;
+  @apply overflow-hidden py-1;
+  min-height: 40px;
 }
 
 /* --- Стилі кнопок (+ і стрілка) --- */
 
 .icon-button {
-  /* Квадратна форма, центрування контенту */
   @apply flex items-center justify-center h-12 w-12 rounded-xl;
   @apply bg-zinc-800 text-zinc-400 cursor-pointer;
   @apply transition-all duration-200 active:scale-95;
 
+  /* Стилі для заблокованого стану */
   @apply disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100;
 }
 
@@ -59,12 +55,11 @@
 /* --- Стилі сітки результатів (Grid) --- */
 
 .results-grid {
-  /* Сітка: 1 колонка на моб., 3 колонки на десктопі */
-  @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+  /* lg:grid-cols-3 або 4 за вашим бажанням для десктопу */
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
 }
 
 .result-card {
-  /* Картка: темний фон, рамка, заокруглення, overflow-hidden для картинки */
   @apply bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden;
   @apply cursor-pointer transition-all duration-300;
 }
@@ -83,11 +78,12 @@
 
 /* Нижня частина картки (опис) */
 .card-description {
-  @apply p-4 text-sm text-zinc-400;
+  @apply p-4 bg-zinc-900/80;
 }
 .delete-btn {
-  /* Ми беремо всі ваші класи і групуємо їх тут */
-  @apply absolute top-2 right-2 p-1 bg-red-900/20 text-red-500 rounded-md;
+  /* Ми використовуємо абсолютне позиціонування, щоб кнопка була зверху картки */
+  @apply absolute top-2 right-2 w-8 h-8 flex items-center justify-center;
+  @apply bg-zinc-800/80 text-zinc-400 rounded-lg backdrop-blur-sm;
   @apply opacity-0 transition-opacity duration-200 cursor-pointer;
   @apply hover:bg-red-500 hover:text-white;
 

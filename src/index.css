@@ -1,22 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  /* Тут можна налаштувати власні кольори, якщо стандартних замало */
   --color-brand-dark: #0a0a0a;
   --color-brand-gray: #171717;
 }
 
 @layer base {
-  body {
-    /* Використовуємо zinc-950 для глибокого темно-сірого/чорного */
-    @apply bg-zinc-950 text-zinc-100 antialiased;
-    margin: 0;
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Прибираємо всі обмеження Vite */
+  :root {
+    line-height: 1.5;
+    font-weight: 400;
   }
 
-  html {
-    /* Забезпечуємо чорний фон при скролі на iOS та плавний скрол */
-    background-color: #09090b;
-    color-scheme: dark;
+  body {
+    @apply bg-zinc-950 text-zinc-100 antialiased;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    display: block; /* Важливо: прибираємо flex, який міг центрикувати все */
+  }
+
+  #root {
+    width: 100%;
+    margin: 0;
+    padding: 0;
   }
 }

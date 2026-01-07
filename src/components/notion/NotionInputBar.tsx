@@ -1,5 +1,6 @@
 import React from "react";
 import { memo } from "react";
+import { useAutoResizeTextarea } from "../hooks/useAutoResizeTextarea";
 
 interface NotionInputBarProps {
   value: string;
@@ -11,6 +12,8 @@ interface NotionInputBarProps {
 
 export const NotionInputBar = memo(
   ({ value, onChange, onKeyDown, onSubmit, disabled }: NotionInputBarProps) => {
+    const textAreaRef = useAutoResizeTextarea(value);
+
     return (
       <div className="input-bar-wrapper">
         {/* Кнопка 1: Додати SVG */}
@@ -21,6 +24,7 @@ export const NotionInputBar = memo(
         {/* Центральна частина: Textarea */}
         <div className="textarea-container">
           <textarea
+            ref={textAreaRef}
             className="styled-textarea"
             placeholder="Введіть ваш текст..."
             spellCheck="false"
