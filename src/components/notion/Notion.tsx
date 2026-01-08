@@ -4,8 +4,16 @@ import { NotionInputBar } from "./NotionInputBar";
 import { NotionGrid } from "./NotionGrid";
 
 const Notion = () => {
-  const { data, cards, handleChange, handleKeyDown, addCard, deleteCard } =
-    useNotion();
+  const {
+    data,
+    cards,
+    handleChange,
+    handleKeyDown,
+    addCard,
+    deleteCard,
+    selectedImage,
+    handleImageChange,
+  } = useNotion();
 
   return (
     <div className="notion-container">
@@ -16,6 +24,8 @@ const Notion = () => {
         onKeyDown={handleKeyDown}
         onSubmit={addCard}
         disabled={data.trim().length === 0}
+        selectedImage={selectedImage}
+        onImageSelect={handleImageChange}
       />
       {/* --- НИЖНЯ СІТКА (Grid blocks) --- */}
       <NotionGrid onDelete={deleteCard} cards={cards} />

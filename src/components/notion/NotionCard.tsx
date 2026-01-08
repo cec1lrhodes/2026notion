@@ -16,9 +16,15 @@ const NotionCard: React.FC<NotionCardProps> = ({ item, onDelete }) => {
       </button>
 
       <div className="card-image-placeholder">
-        <span className="text-xs uppercase tracking-tighter text-zinc-700">
-          SVG image
-        </span>
+        {item.svg ? (
+          <img
+            src={item.svg}
+            alt="Card visual"
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <span className="text-xs text-zinc-700 italic">No image</span>
+        )}
       </div>
 
       <div className="card-description">

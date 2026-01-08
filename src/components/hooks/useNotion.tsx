@@ -5,6 +5,7 @@ const STORAGE_KEY = "notion_articles";
 
 export const useNotion = () => {
   const [data, setData] = useState<string>("");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const [cards, setCards] = useState<Card[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -15,18 +16,23 @@ export const useNotion = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
   }, [cards]);
 
+  const handleImageChange = useCallback((url: string | null) => {
+    setSelectedImage(url);
+  }, []);
+
   const addCard = useCallback(() => {
     if (data.trim() === "") return;
 
     const newCard: Card = {
       id: crypto.randomUUID(),
       text: data,
-      svg: undefined,
+      svg: selectedImage || undefined,
     };
     // setCard([newCard, ...card]); при цьому варіанті потрібно додавати card в залежності, що несе за собою ререндер
     setCards((prev) => [newCard, ...prev]);
     setData("");
-  }, [data]);
+    setSelectedImage(null);
+  }, [data, selectedImage]);
 
   const deleteCard = useCallback((id: number | string) => {
     setCards((prevCard) => prevCard.filter((card) => card.id !== id));
@@ -54,6 +60,8 @@ export const useNotion = () => {
     cards,
     handleChange,
     handleKeyDown,
+    selectedImage,
+    handleImageChange,
     addCard,
     deleteCard,
   };
