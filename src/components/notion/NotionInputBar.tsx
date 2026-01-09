@@ -1,7 +1,7 @@
 import React from "react";
 import { memo } from "react";
-import { useAutoResizeTextarea } from "../hooks/useAutoResizeTextarea";
-import { UploadImageButton } from "./buttonsNotion/UploadImageButton";
+import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
+import { UploadImageButton } from "./ui/buttonsNotion/UploadImageButton";
 
 interface NotionInputBarProps {
   value: string;

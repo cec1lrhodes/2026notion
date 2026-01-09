@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { type Card } from "../notion/types/type";
+import { type Card } from "../components/notion/types/type";
 
 const STORAGE_KEY = "notion_articles";
 
@@ -34,7 +34,7 @@ export const useNotion = () => {
     setSelectedImage(null);
   }, [data, selectedImage]);
 
-  const deleteCard = useCallback((id: number | string) => {
+  const deleteCard = useCallback((id: string) => {
     setCards((prevCard) => prevCard.filter((card) => card.id !== id));
   }, []);
 
