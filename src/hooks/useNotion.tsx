@@ -1,42 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
-import { type Card } from "../components/notion/types/type";
-
-const STORAGE_KEY = "notion_articles";
+import { useCallback, useState } from "react";
+import { useCards } from "./useCard";
 
 export const useNotion = () => {
+  // 1. UI logic
   const [data, setData] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const [cards, setCards] = useState<Card[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : [];
-  });
+  // 2. domain logic
+  const { cards, addCard, deleteCard } = useCards();
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
-  }, [cards]);
-
+  // 3. Обробник подій
   const handleImageChange = useCallback((url: string | null) => {
     setSelectedImage(url);
   }, []);
 
-  const addCard = useCallback(() => {
-    if (data.trim() === "") return;
+  const handleAddCard = useCallback(() => {
+    if (data.trim() === "" && !selectedImage) return;
 
-    const newCard: Card = {
-      id: crypto.randomUUID(),
-      text: data,
-      svg: selectedImage || undefined,
-    };
-    // setCard([newCard, ...card]); при цьому варіанті потрібно додавати card в залежності, що несе за собою ререндер
-    setCards((prev) => [newCard, ...prev]);
+    addCard(data, selectedImage); // Бізнес логіка
     setData("");
     setSelectedImage(null);
-  }, [data, selectedImage]);
-
-  const deleteCard = useCallback((id: string) => {
-    setCards((prevCard) => prevCard.filter((card) => card.id !== id));
-  }, []);
+  }, [data, selectedImage, addCard]);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -49,20 +33,20 @@ export const useNotion = () => {
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        addCard();
+        handleAddCard();
       }
     },
-    [addCard]
+    [handleAddCard]
   );
 
   return {
     data,
     cards,
+    selectedImage,
     handleChange,
     handleKeyDown,
-    selectedImage,
     handleImageChange,
-    addCard,
+    addCard: handleAddCard,
     deleteCard,
   };
 };

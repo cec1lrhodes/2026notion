@@ -61,7 +61,7 @@ export const UploadImageButton = memo(
           <button
             className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center"
             onClick={(e) => {
-              e.stopPropagation();
+              e.stopPropagation(); // зупиняє повторне спливання вибору файла
               onImageSelect(null);
             }}
           >
