@@ -11,6 +11,8 @@ interface NotionInputBarProps {
   disabled: boolean;
   selectedImage: string | null;
   onImageSelect: (url: string | null) => void;
+  onCancel?: () => void;
+  isEditing?: boolean;
 }
 
 export const NotionInputBar = memo(
@@ -22,6 +24,8 @@ export const NotionInputBar = memo(
     disabled,
     onImageSelect,
     selectedImage,
+    onCancel,
+    isEditing,
   }: NotionInputBarProps) => {
     const textAreaRef = useAutoResizeTextarea(value);
 
@@ -47,14 +51,27 @@ export const NotionInputBar = memo(
           />
         </div>
 
-        {/* Кнопка 3: Відправити */}
-        <button
-          className="icon-button side-button"
-          onClick={onSubmit}
-          disabled={disabled}
-        >
-          <span>↑</span>
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Кнопка СКАСУВАТИ: рендериться ТІЛЬКИ при редагуванні */}
+          {isEditing && (
+            <button
+              className="icon-button side-button cancel-btn"
+              onClick={onCancel}
+              title="Скасувати (Esc)"
+            >
+              ✕
+            </button>
+          )}
+
+          {/* Кнопка ВІДПРАВИТИ / ЗБЕРЕГТИ */}
+          <button
+            className="icon-button side-button"
+            onClick={onSubmit}
+            disabled={disabled}
+          >
+            <span>{isEditing ? "✅" : "↑"}</span>
+          </button>
+        </div>
       </div>
     );
   }

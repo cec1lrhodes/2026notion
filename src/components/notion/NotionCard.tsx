@@ -4,15 +4,20 @@ import { type Card } from "./types/type";
 interface NotionCardProps {
   item: Card;
   onDelete: (id: string) => void;
+  onEdit: (card: Card) => void;
 }
 
-const NotionCard: React.FC<NotionCardProps> = ({ item, onDelete }) => {
+const NotionCard: React.FC<NotionCardProps> = ({ item, onDelete, onEdit }) => {
   const firstLine = item.text.split("\n")[0];
 
   return (
     <div className="result-card group relative">
       <button className="delete-btn" onClick={() => onDelete(item.id)}>
         <span>✕</span>
+      </button>
+
+      <button className="edit-btn" onClick={() => onEdit(item)}>
+        <span>✎</span>
       </button>
 
       <div className="card-image-placeholder">

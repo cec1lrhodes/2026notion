@@ -13,6 +13,9 @@ const Notion = () => {
     deleteCard,
     selectedImage,
     handleImageChange,
+    startEditing,
+    cancelEditing,
+    isEditing,
   } = useNotion();
 
   return (
@@ -26,9 +29,11 @@ const Notion = () => {
         disabled={data.trim().length === 0}
         selectedImage={selectedImage}
         onImageSelect={handleImageChange}
+        onCancel={cancelEditing}
+        isEditing={isEditing}
       />
       {/* --- НИЖНЯ СІТКА (Grid blocks) --- */}
-      <NotionGrid onDelete={deleteCard} cards={cards} />
+      <NotionGrid onDelete={deleteCard} cards={cards} onEdit={startEditing} />
     </div>
   );
 };

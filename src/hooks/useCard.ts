@@ -27,5 +27,16 @@ export const useCards = () => {
     [setCards]
   );
 
-  return { cards, addCard, deleteCard };
+  const updateCardAction = useCallback(
+    (id: string, text: string, imageUrl?: string | null) => {
+      setCards((prev) =>
+        prev.map((card) =>
+          card.id === id ? { ...card, text, svg: imageUrl || undefined } : card
+        )
+      );
+    },
+    [setCards]
+  );
+
+  return { cards, addCard, deleteCard, updateCardAction };
 };
