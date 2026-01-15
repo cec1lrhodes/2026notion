@@ -4,7 +4,7 @@ import { useCallback } from "react";
 
 const STORAGE_KEY = "notion_cards";
 
-export const useCards = () => {
+export const useCardsManager = () => {
   const [cards, setCards] = useLocalStorage<Card[]>(STORAGE_KEY, []);
 
   const addCard = useCallback(

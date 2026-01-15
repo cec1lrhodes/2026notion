@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useCards } from "./useCard";
+import { useCardsManager } from "./useCardsManager";
 import { type Card } from "../components/notion/types/type";
 
 export const useNotion = () => {
@@ -9,18 +9,18 @@ export const useNotion = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
 
   // 2. domain logic
-  const { cards, addCard, deleteCard, updateCardAction } = useCards();
+  const { cards, addCard, deleteCard, updateCardAction } = useCardsManager();
 
   // 3. Обробник подій
   const handleImageChange = useCallback((url: string | null) => {
     setSelectedImage(url);
   }, []);
 
-  const cancelEditing = () => {
+  const cancelEditing = useCallback(() => {
     setData("");
     setSelectedImage(null);
     setEditingId(null);
-  };
+  }, []);
 
   const startEditing = useCallback((card: Card) => {
     setData(card.text),
@@ -75,5 +75,6 @@ export const useNotion = () => {
     startEditing,
     cancelEditing,
     isEditing: !!editingId,
+    onUpdateCard: updateCardAction,
   };
 };

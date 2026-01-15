@@ -16,6 +16,7 @@ const Notion = () => {
     startEditing,
     cancelEditing,
     isEditing,
+    onUpdateCard,
   } = useNotion();
 
   return (
@@ -33,7 +34,13 @@ const Notion = () => {
         isEditing={isEditing}
       />
       {/* --- НИЖНЯ СІТКА (Grid blocks) --- */}
-      <NotionGrid onDelete={deleteCard} cards={cards} onEdit={startEditing} />
+      <NotionGrid
+        onDelete={deleteCard}
+        cards={cards}
+        onEdit={startEditing}
+        onUpdate={onUpdateCard}
+        onCancelGlobalEdit={cancelEditing}
+      />
     </div>
   );
 };

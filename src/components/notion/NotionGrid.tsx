@@ -6,10 +6,18 @@ interface NotionCardProps {
   cards: Card[];
   onDelete: (id: string) => void;
   onEdit: (card: Card) => void;
+  onUpdate: (id: string, text: string, svg?: string | null) => void;
+  onCancelGlobalEdit: () => void;
 }
 
 export const NotionGrid = memo(
-  ({ cards, onDelete, onEdit }: NotionCardProps) => {
+  ({
+    cards,
+    onDelete,
+    onEdit,
+    onUpdate,
+    onCancelGlobalEdit,
+  }: NotionCardProps) => {
     return (
       <>
         {cards.length === 0 ? (
@@ -24,6 +32,8 @@ export const NotionGrid = memo(
                 item={item}
                 onDelete={onDelete}
                 onEdit={onEdit}
+                onUpdate={onUpdate}
+                onCancelGlobalEdit={onCancelGlobalEdit}
               />
             ))}
           </div>
