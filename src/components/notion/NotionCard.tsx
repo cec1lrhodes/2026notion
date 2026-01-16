@@ -42,6 +42,7 @@ const NotionCard: React.FC<NotionCardProps> = ({
 
   return (
     <div
+      onClick={actions.handlerContainerClick}
       className={`result-card group transition-all duration-500 ease-in-out border border-zinc-800 bg-zinc-900 rounded-xl overflow-hidden flex flex-col ${
         state.isFullView ? fullViewClasses : `relative ${gridClasses}`
       }`}

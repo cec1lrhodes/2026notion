@@ -2,6 +2,7 @@ import "./Notion.css";
 import { useNotion } from "../../hooks/useNotion";
 import { NotionInputBar } from "./NotionInputBar";
 import { NotionGrid } from "./NotionGrid";
+import { SearchInput } from "./ui/inputs/SearchInput";
 
 const Notion = () => {
   const {
@@ -17,10 +18,13 @@ const Notion = () => {
     cancelEditing,
     isEditing,
     onUpdateCard,
+    searchQuery,
+    handleSearchChange,
+    totalCardCount,
   } = useNotion();
 
   return (
-    <div className="notion-container">
+    <div className="notion-container max-w-5xl mx-auto py-10 px-4">
       {/* --- ВЕРХНЯ ПАНЕЛЬ ВВОДУ (Input Bar) --- */}
       <NotionInputBar
         value={data}
@@ -33,6 +37,15 @@ const Notion = () => {
         onCancel={cancelEditing}
         isEditing={isEditing}
       />
+
+      <div className="w-full px-4 mb-6">
+        <SearchInput
+          value={searchQuery}
+          onChange={handleSearchChange}
+          count={totalCardCount}
+        />
+      </div>
+
       {/* --- НИЖНЯ СІТКА (Grid blocks) --- */}
       <NotionGrid
         onDelete={deleteCard}

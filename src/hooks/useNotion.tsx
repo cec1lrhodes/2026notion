@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { useCardsManager } from "./useCardsManager";
 import { type Card } from "../components/notion/types/type";
 
@@ -7,9 +7,15 @@ export const useNotion = () => {
   const [data, setData] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   // 2. domain logic
-  const { cards, addCard, deleteCard, updateCardAction } = useCardsManager();
+  const {
+    cards: allCards,
+    addCard: addCardToStorage,
+    deleteCard,
+    updateCardAction,
+  } = useCardsManager();
 
   // 3. Обробник подій
   const handleImageChange = useCallback((url: string | null) => {
@@ -36,11 +42,11 @@ export const useNotion = () => {
       updateCardAction(editingId, data, selectedImage);
       setEditingId(null);
     } else {
-      addCard(data, selectedImage); // Бізнес логіка
+      addCardToStorage(data, selectedImage); // Бізнес логіка
     }
     setData("");
     setSelectedImage(null);
-  }, [data, selectedImage, addCard, editingId, updateCardAction]);
+  }, [data, selectedImage, addCardToStorage, editingId, updateCardAction]);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -60,12 +66,28 @@ export const useNotion = () => {
         cancelEditing();
       }
     },
-    [handleAddCard]
+    [handleAddCard, cancelEditing]
+  );
+
+  const filteredCard = useMemo(() => {
+    if (!searchQuery.trim()) return allCards;
+
+    return allCards.filter((card) =>
+      card.text.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())
+    );
+  }, [allCards, searchQuery]);
+
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(e.target.value);
+    },
+    []
   );
 
   return {
     data,
-    cards,
+    cards: filteredCard,
+    totalCardCount: filteredCard.length,
     selectedImage,
     handleChange,
     handleKeyDown,
@@ -76,5 +98,7 @@ export const useNotion = () => {
     cancelEditing,
     isEditing: !!editingId,
     onUpdateCard: updateCardAction,
+    searchQuery,
+    handleSearchChange,
   };
 };
