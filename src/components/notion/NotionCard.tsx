@@ -4,27 +4,20 @@ import { CardContentSection } from "./ui/card/CardContentSection";
 import { CardFooter } from "./ui/card/CardFooter";
 import { CardImageSection } from "./ui/card/CardImageSection";
 import { useCardLogic } from "../../hooks/useCardLogic";
+import { useNotion } from "../../hooks/useNotion";
 
 interface NotionCardProps {
   item: Card;
-  onDelete: (id: string) => void;
-  onEdit: (card: Card) => void;
-  onUpdate: (id: string, text: string, imageUrl?: string | null) => void;
-  onCancelGlobalEdit: () => void;
 }
 
-const NotionCard: React.FC<NotionCardProps> = ({
-  item,
-  onDelete,
-  onEdit,
-  onUpdate,
-  onCancelGlobalEdit,
-}) => {
+const NotionCard: React.FC<NotionCardProps> = ({ item }) => {
+  const { deleteCard, startEditing, onUpdateCard, cancelEditing } = useNotion();
+
   const { state, actions } = useCardLogic({
     item,
-    onEdit,
-    onUpdate,
-    onCancelGlobalEdit,
+    onEdit: startEditing,
+    onUpdate: (id, text, svg) => onUpdateCard(id, text, svg ?? null),
+    onCancelGlobalEdit: cancelEditing,
   });
 
   const gridClasses = state.isExpanded
@@ -54,7 +47,7 @@ const NotionCard: React.FC<NotionCardProps> = ({
         isInternalEditing={state.isInlineEditing}
         onToggleFullView={actions.toggleFullView}
         onEditClick={actions.handleEditClick}
-        onDeleteClick={() => onDelete(item.id)}
+        onDeleteClick={() => deleteCard(item.id)}
       />
 
       <CardContentSection

@@ -1,21 +1,22 @@
 import { useCallback, useState, useMemo } from "react";
-import { useCardsManager } from "./useCardsManager";
-import { type Card } from "../components/notion/types/type";
+import { useNotionStore } from "../store/useNotionStore";
+import { type Card } from "../store/useNotionStore";
 
 export const useNotion = () => {
-  // 1. UI logic
+  // 1. UI logic - фурижить через UI
   const [data, setData] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  // 2. domain logic
-  const {
-    cards: allCards,
-    addCard: addCardToStorage,
-    deleteCard,
-    updateCardAction,
-  } = useCardsManager();
+  // 2. domain logic ZUSTAND
+  const cards = useNotionStore((s) => s.cards);
+  const searchQuery = useNotionStore((s) => s.searchQuery);
+  const editingId = useNotionStore((s) => s.editingId);
+
+  const addCardToStore = useNotionStore((s) => s.addCard);
+  const updateCardAction = useNotionStore((s) => s.updateCard);
+  const deleteCard = useNotionStore((s) => s.deleteCard);
+  const setSearchQuery = useNotionStore((s) => s.setSearchQuery);
+  const setEditingId = useNotionStore((s) => s.setEditingId);
 
   // 3. Обробник подій
   const handleImageChange = useCallback((url: string | null) => {
@@ -26,14 +27,17 @@ export const useNotion = () => {
     setData("");
     setSelectedImage(null);
     setEditingId(null);
-  }, []);
+  }, [setEditingId]);
 
-  const startEditing = useCallback((card: Card) => {
-    setData(card.text),
-      setSelectedImage(card.svg || null),
-      setEditingId(card.id),
-      window.scroll({ top: 0, behavior: "smooth" });
-  }, []);
+  const startEditing = useCallback(
+    (card: Card) => {
+      (setData(card.text),
+        setSelectedImage(card.svg || null),
+        setEditingId(card.id),
+        window.scroll({ top: 0, behavior: "smooth" }));
+    },
+    [setEditingId],
+  );
 
   const handleAddCard = useCallback(() => {
     if (data.trim() === "" && !selectedImage) return;
@@ -42,17 +46,17 @@ export const useNotion = () => {
       updateCardAction(editingId, data, selectedImage);
       setEditingId(null);
     } else {
-      addCardToStorage(data, selectedImage); // Бізнес логіка
+      addCardToStore(data, selectedImage); // Бізнес логіка
     }
     setData("");
     setSelectedImage(null);
-  }, [data, selectedImage, addCardToStorage, editingId, updateCardAction]);
+  }, [data, selectedImage, addCardToStore, editingId, updateCardAction]);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setData(e.target.value);
     },
-    []
+    [],
   );
 
   const handleKeyDown = useCallback(
@@ -66,28 +70,26 @@ export const useNotion = () => {
         cancelEditing();
       }
     },
-    [handleAddCard, cancelEditing]
+    [handleAddCard, cancelEditing],
   );
 
-  const filteredCard = useMemo(() => {
-    if (!searchQuery.trim()) return allCards;
-
-    return allCards.filter((card) =>
-      card.text.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())
-    );
-  }, [allCards, searchQuery]);
+  const filteredCards = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return cards;
+    return cards.filter((card) => card.text.toLowerCase().includes(q));
+  }, [cards, searchQuery]);
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearchQuery(e.target.value);
     },
-    []
+    [setSearchQuery],
   );
 
   return {
     data,
-    cards: filteredCard,
-    totalCardCount: filteredCard.length,
+    cards: filteredCards,
+    totalCardCount: filteredCards.length,
     selectedImage,
     handleChange,
     handleKeyDown,

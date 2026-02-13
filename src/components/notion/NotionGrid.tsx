@@ -2,22 +2,12 @@ import { memo } from "react";
 import NotionCard from "./NotionCard";
 import { type Card } from "./types/type";
 
-interface NotionCardProps {
+interface NotionGridProps {
   cards: Card[];
-  onDelete: (id: string) => void;
-  onEdit: (card: Card) => void;
-  onUpdate: (id: string, text: string, svg?: string | null) => void;
-  onCancelGlobalEdit: () => void;
 }
 
 export const NotionGrid = memo(
-  ({
-    cards,
-    onDelete,
-    onEdit,
-    onUpdate,
-    onCancelGlobalEdit,
-  }: NotionCardProps) => {
+  ({ cards }: NotionGridProps) => {
     return (
       <>
         {cards.length === 0 ? (
@@ -30,10 +20,6 @@ export const NotionGrid = memo(
               <NotionCard
                 key={item.id}
                 item={item}
-                onDelete={onDelete}
-                onEdit={onEdit}
-                onUpdate={onUpdate}
-                onCancelGlobalEdit={onCancelGlobalEdit}
               />
             ))}
           </div>

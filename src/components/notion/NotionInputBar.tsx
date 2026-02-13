@@ -1,78 +1,66 @@
-import React from "react";
-import { memo } from "react";
+import React, { memo } from "react";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { UploadImageButton } from "./ui/buttonsNotion/UploadImageButton";
+import { useNotion } from "../../hooks/useNotion";
 
-interface NotionInputBarProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
-  onSubmit: () => void;
-  disabled: boolean;
-  selectedImage: string | null;
-  onImageSelect: (url: string | null) => void;
-  onCancel?: () => void;
-  isEditing?: boolean;
-}
-
-export const NotionInputBar = memo(
-  ({
-    value,
-    onChange,
-    onKeyDown,
-    onSubmit,
-    disabled,
-    onImageSelect,
+export const NotionInputBar = memo(() => {
+  const {
+    data,
+    handleChange,
+    handleKeyDown,
+    addCard,
     selectedImage,
-    onCancel,
+    handleImageChange,
+    cancelEditing,
     isEditing,
-  }: NotionInputBarProps) => {
-    const textAreaRef = useAutoResizeTextarea(value);
+  } = useNotion();
 
-    return (
-      <div className="input-bar-wrapper">
-        {/* Кнопка 1: Додати SVG */}
-        <UploadImageButton
-          onImageSelect={onImageSelect}
-          currentImage={selectedImage}
+  const textAreaRef = useAutoResizeTextarea(data);
+  const disabled = data.trim().length === 0;
+
+  return (
+    <div className="input-bar-wrapper">
+      {/* Кнопка 1: Додати SVG */}
+      <UploadImageButton
+        onImageSelect={handleImageChange}
+        currentImage={selectedImage}
+      />
+
+      {/* Центральна частина: Textarea */}
+      <div className="textarea-container">
+        <textarea
+          ref={textAreaRef}
+          className="styled-textarea"
+          placeholder="Введіть ваш текст..."
+          spellCheck="false"
+          rows={1}
+          onChange={handleChange}
+          value={data}
+          onKeyDown={handleKeyDown}
         />
-
-        {/* Центральна частина: Textarea */}
-        <div className="textarea-container">
-          <textarea
-            ref={textAreaRef}
-            className="styled-textarea"
-            placeholder="Введіть ваш текст..."
-            spellCheck="false"
-            rows={1}
-            onChange={onChange}
-            value={value}
-            onKeyDown={onKeyDown}
-          />
-        </div>
-
-        <div className="flex items-center gap-2">
-          {/* Кнопка СКАСУВАТИ: рендериться ТІЛЬКИ при редагуванні */}
-          {isEditing && (
-            <button
-              className="icon-button side-button cancel-btn"
-              onClick={onCancel}
-              title="Скасувати (Esc)"
-            >
-              ✕
-            </button>
-          )}
-
-          {/* Кнопка ВІДПРАВИТИ / ЗБЕРЕГТИ */}
-          <button
-            className="icon-button side-button"
-            onClick={onSubmit}
-            disabled={disabled}
-          >
-            <span>{isEditing ? "✅" : "↑"}</span>
-          </button>
-        </div>
       </div>
-    );
-  }
-);
+
+      <div className="flex items-center gap-2">
+        {/* Кнопка СКАСУВАТИ: рендериться ТІЛЬКИ при редагуванні */}
+        {isEditing && (
+          <button
+            className="icon-button side-button cancel-btn"
+            onClick={cancelEditing}
+            title="Скасувати (Esc)"
+          >
+            ✕
+          </button>
+        )}
+
+        {/* Кнопка ВІДПРАВИТИ / ЗБЕРЕГТИ */}
+        <button
+          className="icon-button side-button"
+          onClick={addCard}
+          disabled={disabled}
+        >
+          <span>{isEditing ? "✅" : "↑"}</span>
+        </button>
+      </div>
+    </div>
+  );
+});
