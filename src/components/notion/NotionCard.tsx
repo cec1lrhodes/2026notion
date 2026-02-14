@@ -5,13 +5,15 @@ import { CardFooter } from "./ui/card/CardFooter";
 import { CardImageSection } from "./ui/card/CardImageSection";
 import { useCardLogic } from "../../hooks/useCardLogic";
 import { useNotion } from "../../hooks/useNotion";
+import { useNotionCards } from "../../hooks/useNotionCards";
 
 interface NotionCardProps {
   item: Card;
 }
 
 const NotionCard: React.FC<NotionCardProps> = ({ item }) => {
-  const { deleteCard, startEditing, onUpdateCard, cancelEditing } = useNotion();
+  const { deleteCard, startEditing, onUpdateCard, cancelEditing } =
+    useNotionCards();
 
   const { state, actions } = useCardLogic({
     item,
@@ -28,8 +30,8 @@ const NotionCard: React.FC<NotionCardProps> = ({ item }) => {
   const heightClass = state.isFullView
     ? "h-[300px]"
     : state.isExpanded
-    ? "h-[200px]"
-    : "h-[140px]";
+      ? "h-[200px]"
+      : "h-[140px]";
 
   const displayText = state.isInlineEditing ? state.draftText : item.text;
 

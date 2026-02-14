@@ -3,11 +3,10 @@ import { useNotion } from "../../hooks/useNotion";
 import { NotionInputBar } from "./NotionInputBar";
 import { NotionGrid } from "./NotionGrid";
 import { SearchInput } from "./ui/inputs/SearchInput";
+import { useNotionCards } from "../../hooks/useNotionCards";
 
 const Notion = () => {
-  const {
-    cards,
-  } = useNotion();
+  const { cards } = useNotionCards();
 
   return (
     <div className="notion-container max-w-5xl mx-auto py-10 px-4">

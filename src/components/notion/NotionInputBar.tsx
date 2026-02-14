@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { UploadImageButton } from "./ui/buttonsNotion/UploadImageButton";
 import { useNotion } from "../../hooks/useNotion";
+import { useNotionInput } from "../../hooks/useNotionInput";
 
 export const NotionInputBar = memo(() => {
   const {
@@ -13,7 +14,7 @@ export const NotionInputBar = memo(() => {
     handleImageChange,
     cancelEditing,
     isEditing,
-  } = useNotion();
+  } = useNotionInput();
 
   const textAreaRef = useAutoResizeTextarea(data);
   const disabled = data.trim().length === 0;

@@ -1,8 +1,9 @@
 import { memo } from "react";
 import { useNotion } from "../../../../hooks/useNotion";
+import { useNotionSearch } from "../../../../hooks/useNotionSearch";
 
 export const SearchInput = memo(() => {
-  const { searchQuery, handleSearchChange, totalCardCount } = useNotion();
+  const { searchQuery, handleSearchChange, totalCardCount } = useNotionSearch();
 
   return (
     <div className="relative w-full max-w-md mx-auto mb-6 group">
@@ -35,7 +36,7 @@ export const SearchInput = memo(() => {
       {searchQuery && (
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
           <span className="text-xs text-зinc-600 font-mono">
-            {totalCardCount} results
+            {totalCardCount.length} results
           </span>
         </div>
       )}
