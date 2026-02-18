@@ -1,23 +1,32 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { type Card } from "./types/type";
 import { CardContentSection } from "./ui/card/CardContentSection";
 import { CardFooter } from "./ui/card/CardFooter";
 import { CardImageSection } from "./ui/card/CardImageSection";
 import { useCardLogic } from "../../hooks/useCardLogic";
-import { useNotion } from "../../hooks/useNotion";
 import { useNotionCards } from "../../hooks/useNotionCards";
+import { useCardEditing } from "../../hooks/useCardEditing";
+import { useDeleteCard, useUpdateCard } from "../../store/useNotionStore";
 
 interface NotionCardProps {
   item: Card;
 }
 
 const NotionCard: React.FC<NotionCardProps> = ({ item }) => {
-  const { deleteCard, startEditing, onUpdateCard, cancelEditing } =
-    useNotionCards();
+  useEffect(() => {
+    console.log("🔵 NotionCard RENDERED, id:", item.id);
+  });
+
+  // Доменні дії над картками (CRUD)
+  const deleteCard = useDeleteCard();
+  const onUpdateCard = useUpdateCard();
+
+  // Логіка вибору картки для редагування (editingId в сторі)
+  const { startEditing, cancelEditing } = useCardEditing();
 
   const { state, actions } = useCardLogic({
     item,
-    onEdit: startEditing,
+    onEdit: () => startEditing(item),
     onUpdate: (id, text, svg) => onUpdateCard(id, text, svg ?? null),
     onCancelGlobalEdit: cancelEditing,
   });

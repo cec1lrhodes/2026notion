@@ -1,9 +1,14 @@
-import { memo } from "react";
-import { useNotion } from "../../../../hooks/useNotion";
+import { memo, useEffect } from "react";
 import { useNotionSearch } from "../../../../hooks/useNotionSearch";
+import { useFilteredCardsCount } from "../../../../hooks/useFilteredCardsCount";
 
 export const SearchInput = memo(() => {
-  const { searchQuery, handleSearchChange, totalCardCount } = useNotionSearch();
+  const { searchQuery, handleSearchChange } = useNotionSearch();
+  const totalCardsCount = useFilteredCardsCount();
+
+  useEffect(() => {
+    console.log("🟡 SearchInput RENDERED, searchQuery:", searchQuery);
+  });
 
   return (
     <div className="relative w-full max-w-md mx-auto mb-6 group">
@@ -36,7 +41,7 @@ export const SearchInput = memo(() => {
       {searchQuery && (
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
           <span className="text-xs text-зinc-600 font-mono">
-            {totalCardCount.length} results
+            {totalCardsCount} results
           </span>
         </div>
       )}

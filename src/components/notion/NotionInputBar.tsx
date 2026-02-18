@@ -1,10 +1,13 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { useAutoResizeTextarea } from "../../hooks/useAutoResizeTextarea";
 import { UploadImageButton } from "./ui/buttonsNotion/UploadImageButton";
-import { useNotion } from "../../hooks/useNotion";
 import { useNotionInput } from "../../hooks/useNotionInput";
 
 export const NotionInputBar = memo(() => {
+  useEffect(() => {
+    console.log("🔴 NotionInputBar RENDERED");
+  });
+
   const {
     data,
     handleChange,

@@ -1,19 +1,33 @@
 import { useCallback, useState, useEffect } from "react";
-import { useNotionStore } from "../store/useNotionStore";
+import {
+  useNotionStore,
+  useEditingId,
+  useSetEditingId,
+  useAddCard,
+  useUpdateCard,
+} from "../store/useNotionStore";
 
 export const useNotionInput = () => {
+  // 1. Локальний стан для тексту та зображення (не викликає ререндер інших компонентів)
   const [data, setData] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const editingId = useNotionStore((s) => s.editingId);
-  const cards = useNotionStore((s) => s.cards);
-  const setEditingId = useNotionStore((s) => s.setEditingId);
-  const addCardToStore = useNotionStore((s) => s.addCard);
-  const updateCardAction = useNotionStore((s) => s.updateCard);
+  // 2. Отримуємо значення зі стору (підписка тільки на editingId)
+  const editingId = useEditingId();
 
+  // 3. Отримуємо екшени (вони стабільні, не викликають ререндерів)
+  const setEditingId = useSetEditingId();
+  const addCardToStore = useAddCard();
+  const updateCardAction = useUpdateCard();
+
+  // 4. Синхронізація при редагуванні
   useEffect(() => {
     if (editingId) {
-      const card = cards.find((c) => c.id === editingId);
+      // Отримуємо актуальні дані картки без підписки на весь масив cards
+      const card = useNotionStore
+        .getState()
+        .cards.find((c) => c.id === editingId);
+
       if (card) {
         setData(card.text);
         setSelectedImage(card.svg ?? null);
@@ -22,27 +36,36 @@ export const useNotionInput = () => {
       setData("");
       setSelectedImage(null);
     }
-  }, [editingId, cards]);
+  }, [editingId]);
+
+  // 5. Обробники подій (всі в useCallback для стабільності пропсів)
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setData(e.target.value);
+    },
+    [],
+  );
 
   const handleImageChange = useCallback((url: string | null) => {
     setSelectedImage(url);
   }, []);
 
   const cancelEditing = useCallback(() => {
-    setData("");
-    setSelectedImage(null);
     setEditingId(null);
   }, [setEditingId]);
 
   const handleAddCard = useCallback(() => {
-    if (data.trim() === "" && !selectedImage) return;
+    const trimmedData = data.trim();
+    if (!trimmedData && !selectedImage) return;
 
     if (editingId) {
-      updateCardAction(editingId, data, selectedImage);
+      updateCardAction(editingId, trimmedData, selectedImage);
       setEditingId(null);
     } else {
-      addCardToStore(data, selectedImage);
+      addCardToStore(trimmedData, selectedImage);
     }
+
+    // Очищення після успішної дії
     setData("");
     setSelectedImage(null);
   }, [
@@ -53,13 +76,6 @@ export const useNotionInput = () => {
     updateCardAction,
     setEditingId,
   ]);
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setData(e.target.value);
-    },
-    [],
-  );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
