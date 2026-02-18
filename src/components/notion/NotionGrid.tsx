@@ -1,22 +1,13 @@
 import { memo, useEffect } from "react";
 import NotionCard from "./NotionCard";
-import { type Card } from "./types/type";
-import { useDeleteCard, useUpdateCard } from "../../store/useNotionStore";
 import { useFilteredCards } from "../../hooks/useFilteredCards";
 
-interface NotionGridProps {
-  cards: Card[];
-}
-
 export const NotionGrid = memo(() => {
-  useEffect(() => {
-    console.log("🟢 NotionGrid RENDERED, cards count:", cards.length);
-  });
-
   const cards = useFilteredCards();
 
-  const deleteCard = useDeleteCard();
-  const updateCard = useUpdateCard();
+  useEffect(() => {
+    console.log("🟢 NotionGrid RENDERED, cards count:", cards.length);
+  }, [cards.length]);
 
   return (
     <>
@@ -27,12 +18,7 @@ export const NotionGrid = memo(() => {
       ) : (
         <div className="results-grid">
           {cards.map((item) => (
-            <NotionCard
-              key={item.id}
-              item={item}
-              onDelete={deleteCard}
-              onUpdate={updateCard}
-            />
+            <NotionCard key={item.id} item={item} />
           ))}
         </div>
       )}
