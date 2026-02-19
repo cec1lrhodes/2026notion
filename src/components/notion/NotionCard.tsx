@@ -4,7 +4,6 @@ import { CardContentSection } from "./ui/card/CardContentSection";
 import { CardFooter } from "./ui/card/CardFooter";
 import { CardImageSection } from "./ui/card/CardImageSection";
 import { useCardLogic } from "../../hooks/useCardLogic";
-import { useNotionCards } from "../../hooks/useNotionCards";
 import { useCardEditing } from "../../hooks/useCardEditing";
 import { useDeleteCard, useUpdateCard } from "../../store/useNotionStore";
 
