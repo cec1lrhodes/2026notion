@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import Kanban from "../components/kanban/Kanban";
+import KanbanMain from "../components/kanban/KanbanMain";
 
 export const Route = createFileRoute("/newclear")({
-  component: Kanban,
+  component: KanbanMain,
 });
