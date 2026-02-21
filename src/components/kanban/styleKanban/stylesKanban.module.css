@@ -12,14 +12,17 @@
   --radius-sm: 6px;
 
   min-height: 100vh;
-  padding: 32px 40px 60px;
+  padding: 48px 208px 48px 152px;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
   box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Центруємо вміст (header + board) */
 }
 
-/* box-sizing тільки всередині kanban, не глобально */
 .kanban *,
 .kanban *::before,
 .kanban *::after {
@@ -33,13 +36,13 @@
   display: flex;
   align-items: baseline;
   gap: 16px;
-  margin-bottom: 36px;
+  margin-bottom: 24px;
 }
 
 .logo {
-  font-size: 40px;
+  font-size: 28px;
   font-weight: 700;
-  letter-spacing: -2px;
+  letter-spacing: -1.5px;
   color: #fff;
   line-height: 1;
 }
@@ -55,9 +58,11 @@
 /* ── Board ── */
 .board {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  gap: 24px;
+  width: 100;
   align-items: start;
+  max-width: 2000px;
 }
 
 /* ── Column ── */
@@ -69,12 +74,29 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s,
+    transform 0.2s;
 }
 
+.columnDragOver {
+  border-color: #52525b;
+  box-shadow:
+    0 0 0 1px #52525b,
+    0 0 24px rgba(255, 255, 255, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  background: #1a1a1a;
+  transform: scale(1.005);
+}
+
+/* ── Gradient accent line ── */
 .columnAccentLine {
   height: 3px;
   width: 100%;
-  opacity: 0.9;
+  opacity: 0.85;
+  flex-shrink: 0;
 }
 
 .columnHeader {
@@ -94,6 +116,7 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1px;
+  color: var(--text-muted);
   opacity: 0.8;
 }
 
@@ -122,6 +145,29 @@
   flex-direction: column;
   gap: 8px;
   padding: 4px 12px 8px;
+  min-height: 8px;
+}
+
+/* ── Drop placeholder ── */
+@keyframes placeholderPulse {
+  0%,
+  100% {
+    border-color: #3f3f46;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  50% {
+    border-color: #71717a;
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.dropPlaceholder {
+  height: 60px;
+  border: 1.5px dashed #52525b;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.02);
+  flex-shrink: 0;
+  animation: placeholderPulse 1.2s ease-in-out infinite;
 }
 
 /* ── Card ── */
@@ -129,11 +175,14 @@
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 12px 14px;
+  padding: 10px 12px;
+  cursor: grab;
   transition:
     border-color 0.15s,
-    background 0.15s;
-  cursor: default;
+    background 0.15s,
+    opacity 0.15s,
+    transform 0.15s;
+  user-select: none;
 }
 
 .card:hover {
@@ -141,11 +190,21 @@
   background: var(--surface-3);
 }
 
+.card:active {
+  cursor: grabbing;
+}
+
+.cardDragging {
+  /* Не змінюємо вигляд оригінальної картки під час перетягування.
+     Браузер сам робить ghost image — не заважаємо йому. */
+  opacity: 1;
+}
+
 .cardCategory {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .categoryDot {
@@ -163,10 +222,10 @@
 }
 
 .cardTitle {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text);
-  line-height: 1.45;
+  line-height: 1.4;
   word-break: break-word;
 }
 
@@ -174,7 +233,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .cardId {
@@ -183,68 +242,29 @@
   font-weight: 400;
 }
 
-/* ── Card context menu ── */
-.cardMenuWrapper {
-  position: relative;
-}
-
-.cardMenuBtn {
+/* ── Delete button ── */
+.cardDeleteBtn {
   background: none;
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 15px;
-  padding: 2px 6px;
+  font-size: 11px;
+  padding: 3px 6px;
   border-radius: 4px;
   line-height: 1;
-  letter-spacing: 1px;
   transition:
     color 0.1s,
     background 0.1s;
+  opacity: 0;
 }
 
-.cardMenuBtn:hover {
-  color: var(--text);
-  background: var(--surface-3);
+.card:hover .cardDeleteBtn {
+  opacity: 1;
 }
 
-.cardMenu {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 4px);
-  background: #1a1a1a;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  min-width: 140px;
-  z-index: 50;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-}
-
-.cardMenuItem {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  color: var(--text-dim);
-  font-family: var(--font);
-  font-size: 12px;
-  padding: 8px 12px;
-  cursor: pointer;
-  transition:
-    background 0.1s,
-    color 0.1s;
-}
-
-.cardMenuItem:hover {
-  background: var(--surface-3);
-  color: var(--text);
-}
-
-.cardMenuItemDanger:hover {
-  background: rgba(239, 68, 68, 0.12);
+.cardDeleteBtn:hover {
   color: #f87171;
+  background: rgba(239, 68, 68, 0.1);
 }
 
 /* ── Add Card ── */
@@ -355,12 +375,14 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 900px) {
+@media (max-width: 1600px) {
   .board {
     grid-template-columns: 1fr;
   }
 
   .kanban {
-    padding: 20px 16px 40px;
+    /* Зменшуємо бокові відступи для менших екранів */
+    padding-left: 152px;
+    padding-right: 56px;
   }
 }

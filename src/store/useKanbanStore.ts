@@ -22,6 +22,9 @@ interface KanbanState {
   cards: Card[];
   columns: Column[];
 
+  draggingCardId: string | null;
+  dragOverColumnId: ColumnId | null;
+
   // Card actions
   addCard: (card: Omit<Card, "id" | "createdAt">) => void;
   removeCard: (cardId: string) => void;
@@ -31,8 +34,10 @@ interface KanbanState {
     patch: Partial<Pick<Card, "title" | "category">>,
   ) => void;
 
+  setDraggingCard: (cardId: string | null) => void;
+  setDragOverColumn: (columnId: ColumnId | null) => void;
+
   // Selectors
-  getCardsByColumn: (columnId: ColumnId) => Card[];
   getTotalCount: () => number;
 }
 
@@ -100,13 +105,15 @@ export const useKanbanStore = create<KanbanState>()(
       cards: DEFAULT_CARDS,
       columns: DEFAULT_COLUMNS,
 
+      draggingCardId: null,
+      dragOverColumnId: null,
+
       addCard: (cardData) => {
         const newCard: Card = {
           ...cardData,
           id: `c${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
           createdAt: Date.now(),
         };
-
         set((state) => ({ cards: [...state.cards, newCard] }));
       },
 
@@ -130,16 +137,15 @@ export const useKanbanStore = create<KanbanState>()(
         }));
       },
 
-      getCardsByColumn: (columnId) => {
-        return get()
-          .cards.filter((c) => c.columnId === columnId)
-          .sort((a, b) => a.createdAt - b.createdAt);
-      },
+      setDraggingCard: (cardId) => set({ draggingCardId: cardId }),
+      setDragOverColumn: (columnId) => set({ dragOverColumnId: columnId }),
 
       getTotalCount: () => get().cards.length,
     }),
     {
       name: "kanban-storage",
+      // drag state не зберігаємо в localStorage
+      partialize: (state) => ({ cards: state.cards, columns: state.columns }),
     },
   ),
 );

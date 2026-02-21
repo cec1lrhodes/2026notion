@@ -4,6 +4,7 @@ import {
   type Card,
   type ColumnId,
 } from "../../store/useKanbanStore";
+import styles from "./styleKanban/stylesKanban.module.css";
 
 const CATEGORIES: Card["category"][] = ["DESIGN", "DEV", "CONTENT", "DEVOPS"];
 
@@ -12,7 +13,7 @@ interface Props {
 }
 
 export const KanbanAddCard: React.FC<Props> = ({ columnId }) => {
-  const { addCard } = useKanbanStore();
+  const addCard = useKanbanStore((s) => s.addCard);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<Card["category"]>("DEV");
@@ -28,16 +29,16 @@ export const KanbanAddCard: React.FC<Props> = ({ columnId }) => {
 
   if (!open) {
     return (
-      <button className="add-card-trigger" onClick={() => setOpen(true)}>
+      <button className={styles.addCardTrigger} onClick={() => setOpen(true)}>
         <span>+</span> Add card
       </button>
     );
   }
 
   return (
-    <div className="add-card-form">
+    <div className={styles.addCardForm}>
       <input
-        className="add-card-input"
+        className={styles.addCardInput}
         placeholder="Card title..."
         value={title}
         onChange={(e) => setTitle(e.target.value)}
@@ -47,9 +48,9 @@ export const KanbanAddCard: React.FC<Props> = ({ columnId }) => {
         }}
         autoFocus
       />
-      <div className="add-card-row">
+      <div className={styles.addCardRow}>
         <select
-          className="add-card-select"
+          className={styles.addCardSelect}
           value={category}
           onChange={(e) => setCategory(e.target.value as Card["category"])}
         >
@@ -59,11 +60,11 @@ export const KanbanAddCard: React.FC<Props> = ({ columnId }) => {
             </option>
           ))}
         </select>
-        <div className="add-card-actions">
-          <button className="btn-cancel" onClick={() => setOpen(false)}>
+        <div className={styles.addCardActions}>
+          <button className={styles.btnCancel} onClick={() => setOpen(false)}>
             Cancel
           </button>
-          <button className="btn-add" onClick={handleSubmit}>
+          <button className={styles.btnAdd} onClick={handleSubmit}>
             Add
           </button>
         </div>

@@ -1,10 +1,5 @@
 import styles from "./styleKanban/stylesKanban.module.css";
-import {
-  useKanbanStore,
-  type ColumnId,
-  type Card,
-} from "../../store/useKanbanStore";
-import { useState } from "react";
+import { useKanbanStore, type Card } from "../../store/useKanbanStore";
 
 const CATEGORY_COLORS: Record<Card["category"], string> = {
   DESIGN: "#a78bfa",
@@ -19,27 +14,29 @@ interface Props {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-const COLUMN_OPTIONS: { id: ColumnId; label: string }[] = [
-  { id: "todo", label: "To Do" },
-  { id: "in-progress", label: "In Progress" },
-  { id: "done", label: "Done" },
-];
-
 export const KanbanCard: React.FC<Props> = ({ card }) => {
-  const { removeCard, moveCard } = useKanbanStore();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const removeCard = useKanbanStore((s) => s.removeCard);
+  const setDraggingCard = useKanbanStore((s) => s.setDraggingCard);
 
   const accentColor = CATEGORY_COLORS[card.category];
   const shortId = `#${card.id.slice(-6)}`;
 
+  // Перетягування
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData("cardId", card.id);
+    e.dataTransfer.effectAllowed = "move";
+    setTimeout(() => setDraggingCard(card.id), 0);
+  };
+
+  const handleDragEnd = () => setDraggingCard(null);
+
   return (
     <div
       className={styles.card}
-      style={
-        {
-          "--accent": accentColor,
-        } as React.CSSProperties
-      }
+      style={{ "--accent": accentColor } as React.CSSProperties}
+      draggable
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
     >
       {/* Category badge */}
       <div className={styles.cardCategory}>
@@ -57,48 +54,15 @@ export const KanbanCard: React.FC<Props> = ({ card }) => {
 
       {/* Footer */}
       <div className={styles.cardFooter}>
-        <span className={styles.cardI}>{shortId}</span>
-
-        {/* Context menu */}
-        <div className={styles.cardMenuWrapper}>
-          <button
-            className={styles.cardMenuBtn}
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-label="Card options"
-          >
-            ···
-          </button>
-          {menuOpen && (
-            <div
-              className={styles.cardMenu}
-              onMouseLeave={() => setMenuOpen(false)}
-            >
-              {COLUMN_OPTIONS.filter((col) => col.id !== card.columnId).map(
-                (col) => (
-                  <button
-                    key={col.id}
-                    className={styles.cardMenuItem}
-                    onClick={() => {
-                      moveCard(card.id, col.id);
-                      setMenuOpen(false);
-                    }}
-                  >
-                    → {col.label}
-                  </button>
-                ),
-              )}
-              <button
-                className={styles.cardMenuItemDanger}
-                onClick={() => {
-                  removeCard(card.id);
-                  setMenuOpen(false);
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          )}
-        </div>
+        <span className={styles.cardId}>{shortId}</span>
+        <button
+          className={styles.cardDeleteBtn}
+          onClick={() => removeCard(card.id)}
+          aria-label="Delete card"
+          title="Delete card"
+        >
+          ✕
+        </button>
       </div>
     </div>
   );
