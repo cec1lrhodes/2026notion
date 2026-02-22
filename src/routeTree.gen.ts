@@ -9,12 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as NewclearRouteImport } from './routes/newclear'
+import { Route as KanbanRouteImport } from './routes/kanban'
 import { Route as IndexRouteImport } from './routes/index'
 
-const NewclearRoute = NewclearRouteImport.update({
-  id: '/newclear',
-  path: '/newclear',
+const KanbanRoute = KanbanRouteImport.update({
+  id: '/kanban',
+  path: '/kanban',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,37 +25,37 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/newclear': typeof NewclearRoute
+  '/kanban': typeof KanbanRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/newclear': typeof NewclearRoute
+  '/kanban': typeof KanbanRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/newclear': typeof NewclearRoute
+  '/kanban': typeof KanbanRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/newclear'
+  fullPaths: '/' | '/kanban'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/newclear'
-  id: '__root__' | '/' | '/newclear'
+  to: '/' | '/kanban'
+  id: '__root__' | '/' | '/kanban'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  NewclearRoute: typeof NewclearRoute
+  KanbanRoute: typeof KanbanRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/newclear': {
-      id: '/newclear'
-      path: '/newclear'
-      fullPath: '/newclear'
-      preLoaderRoute: typeof NewclearRouteImport
+    '/kanban': {
+      id: '/kanban'
+      path: '/kanban'
+      fullPath: '/kanban'
+      preLoaderRoute: typeof KanbanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,7 +70,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  NewclearRoute: NewclearRoute,
+  KanbanRoute: KanbanRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

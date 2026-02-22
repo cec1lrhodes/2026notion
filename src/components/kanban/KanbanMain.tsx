@@ -1,11 +1,13 @@
 import styles from "./styleKanban/stylesKanban.module.css";
 import { useKanbanStore } from "../../store/useKanbanStore";
-import { KanbanColum } from "./KanbanColumn";
+import { KanbanColumn } from "./KanbanColumn";
 
 const KanbanMain = () => {
+  console.log("KanbanMain render");
   const columns = useKanbanStore((s) => s.columns);
   const totalCount = useKanbanStore((s) => s.getTotalCount());
 
+  // sort для того,щоб колонки завжди були у правильному порядку, сортування по order (zustand мутувати стан напряму не може)
   const sortedColumns = [...columns].sort((a, b) => a.order - b.order);
 
   return (
@@ -19,7 +21,7 @@ const KanbanMain = () => {
 
       <div className={styles.board}>
         {sortedColumns.map((col) => (
-          <KanbanColum column={col} key={col.id} />
+          <KanbanColumn column={col} key={col.id} />
         ))}
       </div>
     </div>

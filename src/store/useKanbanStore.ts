@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type Category = "DESIGN" | "DEV" | "CONTENT" | "DEVOPS";
+export type Category = "BOOKS" | "DEV" | "CONTENT" | "DEVOPS";
 export type ColumnId = "todo" | "in-progress" | "done";
 
 export interface Card {
@@ -47,62 +47,62 @@ const DEFAULT_COLUMNS: Column[] = [
   { id: "done", label: "Done", order: 3 },
 ];
 
-const DEFAULT_CARDS: Card[] = [
-  {
-    id: "c1",
-    title: "Auth flow refactor",
-    category: "DEV",
-    columnId: "todo",
-    createdAt: Date.now() - 5000,
-  },
-  {
-    id: "c2",
-    title: "Landing page copy",
-    category: "CONTENT",
-    columnId: "todo",
-    createdAt: Date.now() - 4000,
-  },
-  {
-    id: "c3",
-    title: "Design system tokens",
-    category: "DESIGN",
-    columnId: "in-progress",
-    createdAt: Date.now() - 3000,
-  },
-  {
-    id: "c4",
-    title: "Write unit tests",
-    category: "DEV",
-    columnId: "in-progress",
-    createdAt: Date.now() - 2000,
-  },
-  {
-    id: "c5",
-    title: "API rate limiting",
-    category: "DEV",
-    columnId: "in-progress",
-    createdAt: Date.now() - 1000,
-  },
-  {
-    id: "c6",
-    title: "Wireframe onboarding",
-    category: "DESIGN",
-    columnId: "in-progress",
-    createdAt: Date.now() - 500,
-  },
-  {
-    id: "c7",
-    title: "Set up CI pipeline",
-    category: "DEVOPS",
-    columnId: "in-progress",
-    createdAt: Date.now(),
-  },
-];
+// const DEFAULT_CARDS: Card[] = [
+//   {
+//     id: "c1",
+//     title: "Auth flow refactor",
+//     category: "DEV",
+//     columnId: "todo",
+//     createdAt: Date.now() - 5000,
+//   },
+//   {
+//     id: "c2",
+//     title: "Landing page copy",
+//     category: "CONTENT",
+//     columnId: "todo",
+//     createdAt: Date.now() - 4000,
+//   },
+//   {
+//     id: "c3",
+//     title: "Design system tokens",
+//     category: "DESIGN",
+//     columnId: "in-progress",
+//     createdAt: Date.now() - 3000,
+//   },
+//   {
+//     id: "c4",
+//     title: "Write unit tests",
+//     category: "DEV",
+//     columnId: "in-progress",
+//     createdAt: Date.now() - 2000,
+//   },
+//   {
+//     id: "c5",
+//     title: "API rate limiting",
+//     category: "DEV",
+//     columnId: "in-progress",
+//     createdAt: Date.now() - 1000,
+//   },
+//   {
+//     id: "c6",
+//     title: "Wireframe onboarding",
+//     category: "DESIGN",
+//     columnId: "in-progress",
+//     createdAt: Date.now() - 500,
+//   },
+//   {
+//     id: "c7",
+//     title: "Set up CI pipeline",
+//     category: "DEVOPS",
+//     columnId: "in-progress",
+//     createdAt: Date.now(),
+//   },
+// ];
 
 export const useKanbanStore = create<KanbanState>()(
   persist(
     (set, get) => ({
-      cards: DEFAULT_CARDS,
+      cards: [],
       columns: DEFAULT_COLUMNS,
 
       draggingCardId: null,
@@ -144,7 +144,7 @@ export const useKanbanStore = create<KanbanState>()(
     }),
     {
       name: "kanban-storage",
-      // drag state не зберігаємо в localStorage
+      // drag state(перетягування) не зберігаємо в localStorage
       partialize: (state) => ({ cards: state.cards, columns: state.columns }),
     },
   ),

@@ -6,25 +6,105 @@ const navItems = [
     label: "Notion",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <rect x="3" y="3" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.9"/>
-        <rect x="13" y="3" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.5"/>
-        <rect x="3" y="13" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.5"/>
-        <rect x="13" y="13" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.2"/>
+        <rect
+          x="3"
+          y="3"
+          width="8"
+          height="8"
+          rx="1.5"
+          fill="currentColor"
+          opacity="0.9"
+        />
+        <rect
+          x="13"
+          y="3"
+          width="8"
+          height="8"
+          rx="1.5"
+          fill="currentColor"
+          opacity="0.5"
+        />
+        <rect
+          x="3"
+          y="13"
+          width="8"
+          height="8"
+          rx="1.5"
+          fill="currentColor"
+          opacity="0.5"
+        />
+        <rect
+          x="13"
+          y="13"
+          width="8"
+          height="8"
+          rx="1.5"
+          fill="currentColor"
+          opacity="0.2"
+        />
       </svg>
     ),
   },
   {
-    to: "/newclear",
-    label: "NewClear",
+    to: "/kanban",
+    label: "Kanban",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="3" fill="currentColor"/>
-        <circle cx="12" cy="12" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.6"/>
-        <circle cx="12" cy="12" r="11" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.25"/>
-        <line x1="12" y1="1" x2="12" y2="5" stroke="currentColor" strokeWidth="1.5" opacity="0.5"/>
-        <line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" strokeWidth="1.5" opacity="0.5"/>
-        <line x1="1" y1="12" x2="5" y2="12" stroke="currentColor" strokeWidth="1.5" opacity="0.5"/>
-        <line x1="19" y1="12" x2="23" y2="12" stroke="currentColor" strokeWidth="1.5" opacity="0.5"/>
+        <circle cx="12" cy="12" r="3" fill="currentColor" />
+        <circle
+          cx="12"
+          cy="12"
+          r="7"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          fill="none"
+          opacity="0.6"
+        />
+        <circle
+          cx="12"
+          cy="12"
+          r="11"
+          stroke="currentColor"
+          strokeWidth="1"
+          fill="none"
+          opacity="0.25"
+        />
+        <line
+          x1="12"
+          y1="1"
+          x2="12"
+          y2="5"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          opacity="0.5"
+        />
+        <line
+          x1="12"
+          y1="19"
+          x2="12"
+          y2="23"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          opacity="0.5"
+        />
+        <line
+          x1="1"
+          y1="12"
+          x2="5"
+          y2="12"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          opacity="0.5"
+        />
+        <line
+          x1="19"
+          y1="12"
+          x2="23"
+          y2="12"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          opacity="0.5"
+        />
       </svg>
     ),
   },

@@ -1,8 +1,9 @@
 import styles from "./styleKanban/stylesKanban.module.css";
 import { useKanbanStore, type Card } from "../../store/useKanbanStore";
+import React from "react";
 
 const CATEGORY_COLORS: Record<Card["category"], string> = {
-  DESIGN: "#a78bfa",
+  BOOKS: "#a78bfa",
   DEV: "#34d399",
   CONTENT: "#f97316",
   DEVOPS: "#f59e0b",
@@ -14,14 +15,14 @@ interface Props {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export const KanbanCard: React.FC<Props> = ({ card }) => {
+export const KanbanCard = React.memo(({ card }: Props) => {
   const removeCard = useKanbanStore((s) => s.removeCard);
   const setDraggingCard = useKanbanStore((s) => s.setDraggingCard);
 
   const accentColor = CATEGORY_COLORS[card.category];
   const shortId = `#${card.id.slice(-6)}`;
 
-  // Перетягування
+  // Перетягування - основа для передачі DnD API
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData("cardId", card.id);
     e.dataTransfer.effectAllowed = "move";
@@ -66,4 +67,4 @@ export const KanbanCard: React.FC<Props> = ({ card }) => {
       </div>
     </div>
   );
-};
+});

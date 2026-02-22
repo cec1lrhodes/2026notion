@@ -6,7 +6,7 @@ import {
 } from "../../store/useKanbanStore";
 import styles from "./styleKanban/stylesKanban.module.css";
 
-const CATEGORIES: Card["category"][] = ["DESIGN", "DEV", "CONTENT", "DEVOPS"];
+const CATEGORIES: Card["category"][] = ["BOOKS", "DEV", "CONTENT", "DEVOPS"];
 
 interface Props {
   columnId: ColumnId;
