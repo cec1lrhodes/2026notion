@@ -374,6 +374,36 @@
   opacity: 0.85;
 }
 
+.columnHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clearColumnBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  transition:
+    color 0.1s,
+    background 0.1s;
+  opacity: 0;
+}
+
+.column:hover .clearColumnBtn {
+  opacity: 1;
+}
+
+.clearColumnBtn:hover {
+  opacity: 1 !important;
+  color: #ef4444; /* Гарний червоний колір (Tailwind red-500) */
+  background: rgba(239, 68, 68, 0.08);
+}
+
 /* ── Responsive ── */
 @media (max-width: 1600px) {
   .board {

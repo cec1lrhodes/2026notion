@@ -27,6 +27,7 @@ export const KanbanColumn = React.memo(({ column }: Props) => {
   );
 
   const gradient = COLUMN_GRADIENT[column.id] ?? "#6b7280";
+  const clearColumn = useKanbanStore((s) => s.clearColumn);
 
   return (
     <div className={styles.column}>
@@ -40,8 +41,20 @@ export const KanbanColumn = React.memo(({ column }: Props) => {
             {String(column.order).padStart(2, "0")}
           </span>
           <h2 className={styles.columnTitle}>{column.label}</h2>
+          <span className={styles.columnCount}>{cards.length}</span>
         </div>
-        <span className={styles.columnCount}>{cards.length}</span>
+
+        {/* Delete all card BUTTON */}
+        <div className={styles.columnHeaderRight}>
+          <button
+            className={styles.clearColumnBtn}
+            onClick={() => clearColumn(column.id)}
+            aria-label="Clear column"
+            title="Clear all cards"
+          >
+            ✕
+          </button>
+        </div>
       </div>
 
       {/* Cards  + ColumnDrop*/}

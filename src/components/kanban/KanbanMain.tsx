@@ -3,7 +3,6 @@ import { useKanbanStore } from "../../store/useKanbanStore";
 import { KanbanColumn } from "./KanbanColumn";
 
 const KanbanMain = () => {
-  console.log("KanbanMain render");
   const columns = useKanbanStore((s) => s.columns);
   const totalCount = useKanbanStore((s) => s.getTotalCount());
 

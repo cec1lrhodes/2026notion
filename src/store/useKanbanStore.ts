@@ -39,6 +39,7 @@ interface KanbanState {
 
   // Selectors
   getTotalCount: () => number;
+  clearColumn: (columnId: ColumnId) => void;
 }
 
 const DEFAULT_COLUMNS: Column[] = [
@@ -141,6 +142,12 @@ export const useKanbanStore = create<KanbanState>()(
       setDragOverColumn: (columnId) => set({ dragOverColumnId: columnId }),
 
       getTotalCount: () => get().cards.length,
+
+      clearColumn: (columnId) => {
+        set((state) => ({
+          cards: state.cards.filter((c) => c.columnId !== columnId),
+        }));
+      },
     }),
     {
       name: "kanban-storage",
