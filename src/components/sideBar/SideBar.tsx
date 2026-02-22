@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { useAuthStore } from "../../store/useAuthStore";
+import { useNavigate } from "@tanstack/react-router";
 
 const navItems = [
   {
@@ -111,6 +113,14 @@ const navItems = [
 ];
 
 export const Sidebar = () => {
+  const logout = useAuthStore((s) => s.logout);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); // isAuthenticated: false, user: null
+    navigate({ to: "/regform" }); // редірект на форму
+  };
+
   return (
     <aside className="group fixed left-0 top-0 h-screen w-14 hover:w-52 bg-[#0a0a0a] border-r border-white/[0.06] flex flex-col py-5 gap-1 transition-all duration-300 ease-in-out overflow-hidden z-50">
       <div className="px-4 mb-4 flex items-center gap-3 h-8">
@@ -132,6 +142,19 @@ export const Sidebar = () => {
           </span>
         </Link>
       ))}
+
+      {/* Logout */}
+      <div className="mt-auto px-2">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.05] transition-all duration-200"
+        >
+          <span>←</span>
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-75 text-sm font-medium whitespace-nowrap">
+            Logout
+          </span>
+        </button>
+      </div>
     </aside>
   );
 };

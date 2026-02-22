@@ -1,0 +1,131 @@
+/* ── RegForm CSS Module ──────────────────────────────────────────────────── */
+
+.wrapper {
+  --surface: #161616;
+  --surface-2: #1e1e1e;
+  --surface-3: #252525;
+  --border: #2a2a2a;
+  --border-focus: #4a4a4a;
+  --text: #e8e8e8;
+  --text-muted: #555;
+  --text-dim: #888;
+  --error: #f87171;
+  --radius: 10px;
+  --radius-sm: 6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #0d0d0d;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.wrapper *,
+.wrapper *::before,
+.wrapper *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Form container ── */
+.form {
+  width: 100%;
+  max-width: 400px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Header ── */
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  letter-spacing: 0.2px;
+}
+
+/* ── Field ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.input {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 10px 12px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input:focus {
+  border-color: var(--border-focus);
+  background: var(--surface-3);
+}
+
+.inputError {
+  border-color: var(--error) !important;
+}
+
+/* ── Error message ── */
+.error {
+  font-size: 11px;
+  color: var(--error);
+}
+
+/* ── Submit ── */
+.submitBtn {
+  margin-top: 4px;
+  width: 100%;
+  background: #e8e8e8;
+  color: #111;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 11px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  letter-spacing: 0.3px;
+}
+
+.submitBtn:hover {
+  opacity: 0.88;
+}
+
+.submitBtn:active {
+  opacity: 0.75;
+}

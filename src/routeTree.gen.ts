@@ -9,68 +9,109 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as KanbanRouteImport } from './routes/kanban'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as RegformRouteImport } from './routes/regform'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppKanbanRouteImport } from './routes/_app.kanban'
 
-const KanbanRoute = KanbanRouteImport.update({
-  id: '/kanban',
-  path: '/kanban',
+const RegformRoute = RegformRouteImport.update({
+  id: '/regform',
+  path: '/regform',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
+} as any)
+const AppKanbanRoute = AppKanbanRouteImport.update({
+  id: '/kanban',
+  path: '/kanban',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/kanban': typeof KanbanRoute
+  '/': typeof AppIndexRoute
+  '/regform': typeof RegformRoute
+  '/kanban': typeof AppKanbanRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/kanban': typeof KanbanRoute
+  '/regform': typeof RegformRoute
+  '/kanban': typeof AppKanbanRoute
+  '/': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/kanban': typeof KanbanRoute
+  '/_app': typeof AppRouteWithChildren
+  '/regform': typeof RegformRoute
+  '/_app/kanban': typeof AppKanbanRoute
+  '/_app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/kanban'
+  fullPaths: '/' | '/regform' | '/kanban'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/kanban'
-  id: '__root__' | '/' | '/kanban'
+  to: '/regform' | '/kanban' | '/'
+  id: '__root__' | '/_app' | '/regform' | '/_app/kanban' | '/_app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  KanbanRoute: typeof KanbanRoute
+  AppRoute: typeof AppRouteWithChildren
+  RegformRoute: typeof RegformRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/kanban': {
-      id: '/kanban'
-      path: '/kanban'
-      fullPath: '/kanban'
-      preLoaderRoute: typeof KanbanRouteImport
+    '/regform': {
+      id: '/regform'
+      path: '/regform'
+      fullPath: '/regform'
+      preLoaderRoute: typeof RegformRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/kanban': {
+      id: '/_app/kanban'
+      path: '/kanban'
+      fullPath: '/kanban'
+      preLoaderRoute: typeof AppKanbanRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppKanbanRoute: typeof AppKanbanRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppKanbanRoute: AppKanbanRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  KanbanRoute: KanbanRoute,
+  AppRoute: AppRouteWithChildren,
+  RegformRoute: RegformRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
