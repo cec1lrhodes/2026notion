@@ -1,13 +1,23 @@
 import { useForm } from "react-hook-form";
 import { type RegisterInterface } from "./FormTypes";
-import { schema } from "./schema";
+import { getSchema } from "./schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import styles from "./stylesRegForm/stylesRegForm.module.css";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { useMemo, useEffect } from "react";
 
 const RegForm = () => {
+  const [mode, setMode] = useState<"register" | "login">("register");
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  const registerUser = useAuthStore((s) => s.register);
+  const loginUser = useAuthStore((s) => s.loginUser);
+
   const navigate = useNavigate();
+
+  const schema = useMemo(() => getSchema(mode), [mode]);
 
   const {
     register,
@@ -16,12 +26,31 @@ const RegForm = () => {
     formState: { errors },
   } = useForm<RegisterInterface>({ resolver: yupResolver(schema) });
 
-  const login = useAuthStore((s) => s.login);
+  useEffect(() => {
+    reset();
+  }, [mode, reset]);
 
   const submitForm = (data: RegisterInterface) => {
-    // тут буде запит на бекенд
-    // поки що  зберігаємо локально і редіректимо
-    login({ email: data.email, username: data.username });
+    setAuthError(null);
+
+    if (mode === "register") {
+      const success = registerUser({
+        email: data.email,
+        username: data.username ?? "",
+        password: data.password,
+      });
+      if (!success) {
+        setAuthError("Email is already taken");
+        return;
+      }
+    } else {
+      const success = loginUser(data.email, data.password);
+      if (!success) {
+        setAuthError("Invalid email or password");
+        return;
+      }
+    }
+
     navigate({ to: "/" });
     reset();
   };
@@ -29,8 +58,30 @@ const RegForm = () => {
   return (
     <div className={styles.wrapper}>
       <form className={styles.form} onSubmit={handleSubmit(submitForm)}>
-        <h1 className={styles.title}>Create account</h1>
-        <p className={styles.subtitle}>Fill in the fields below</p>
+        {/* Header  */}
+        <div className={styles.formHeader}>
+          <div>
+            <h1 className={styles.title}>
+              {mode === "register" ? "Create account" : "Log In"}
+            </h1>
+            <p className={styles.subtitle}>Fill in the fields below</p>
+          </div>
+          <div className={styles.switchMode}>
+            <span className={styles.switchText}>
+              {mode === "register" ? "or" : "or"}
+            </span>
+            <button
+              type="button"
+              className={styles.switchBtn}
+              onClick={() => {
+                setMode(mode === "register" ? "login" : "register");
+                reset();
+              }}
+            >
+              {mode === "register" ? "Log In" : "Register"}
+            </button>
+          </div>
+        </div>
 
         {/* Email */}
         <div className={styles.field}>
@@ -49,22 +100,24 @@ const RegForm = () => {
           )}
         </div>
 
-        {/* Username */}
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="username">
-            Username
-          </label>
-          <input
-            id="username"
-            type="text"
-            placeholder="your_username"
-            className={`${styles.input} ${errors.username ? styles.inputError : ""}`}
-            {...register("username")}
-          />
-          {errors.username && (
-            <span className={styles.error}>{errors.username.message}</span>
-          )}
-        </div>
+        {/* Username  тільки при реєстрації */}
+        {mode === "register" && (
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="username">
+              Username
+            </label>
+            <input
+              id="username"
+              type="text"
+              placeholder="your_username"
+              className={`${styles.input} ${errors.username ? styles.inputError : ""}`}
+              {...register("username")}
+            />
+            {errors.username && (
+              <span className={styles.error}>{errors.username.message}</span>
+            )}
+          </div>
+        )}
 
         {/* Password */}
         <div className={styles.field}>
@@ -84,12 +137,14 @@ const RegForm = () => {
         </div>
 
         {/* Submit */}
+
+        {authError && <span className={styles.error}>{authError}</span>}
+
         <button type="submit" className={styles.submitBtn}>
-          Register
+          {mode === "register" ? "Register" : "Log In"}
         </button>
       </form>
     </div>
   );
 };
-
 export default RegForm;

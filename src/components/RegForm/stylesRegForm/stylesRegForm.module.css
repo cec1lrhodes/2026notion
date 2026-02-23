@@ -129,3 +129,42 @@
 .submitBtn:active {
   opacity: 0.75;
 }
+
+.formHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.switchMode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.switchText {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.switchBtn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.switchBtn:hover {
+  border-color: #4a4a4a;
+  color: var(--text);
+}

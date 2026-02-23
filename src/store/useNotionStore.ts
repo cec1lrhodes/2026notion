@@ -51,6 +51,7 @@ interface NotionActions {
 
   clearAllFilters(): void;
   resetStore(): void;
+  loadUserData(email: string): void;
 }
 
 export type NotionStore = NotionState & NotionActions;
@@ -70,6 +71,16 @@ const initialState: NotionState = {
   error: null,
 };
 
+// helpers
+const getUserNotes = (email: string): NotionCard[] => {
+  const raw = localStorage.getItem(`notion-${email}`);
+  return raw ? JSON.parse(raw) : [];
+};
+
+const saveUserNotes = (email: string, cards: NotionCard[]) => {
+  localStorage.setItem(`notion-${email}`, JSON.stringify(cards));
+};
+
 export const useNotionStore = create<NotionStore>()(
   devtools(
     persist(
@@ -86,6 +97,8 @@ export const useNotionStore = create<NotionStore>()(
               updatedAt: new Date(),
             };
             state.cards.push(newCard);
+            const email = localStorage.getItem("current-user");
+            if (email) saveUserNotes(email, state.cards);
           }),
 
         updateCard: (id, updates) =>
@@ -93,6 +106,8 @@ export const useNotionStore = create<NotionStore>()(
             const card = state.cards.find((c: NotionCard) => c.id === id);
             if (card) {
               Object.assign(card, updates, { updatedAt: new Date() });
+              const email = localStorage.getItem("current-user");
+              if (email) saveUserNotes(email, state.cards);
             }
           }),
 
@@ -101,6 +116,8 @@ export const useNotionStore = create<NotionStore>()(
             state.cards = state.cards.filter((c: NotionCard) => c.id !== id);
             if (state.selectedCardId === id) {
               state.selectedCardId = null;
+              const email = localStorage.getItem("current-user");
+              if (email) saveUserNotes(email, state.cards);
             }
           }),
 
@@ -128,6 +145,13 @@ export const useNotionStore = create<NotionStore>()(
               tags.push(tag);
             }
           }),
+
+        loadUserData: (email) =>
+          set((state) => {
+            state.cards = getUserNotes(email);
+          }),
+
+        resetNotion: () => set(initialState),
 
         setSortBy: (sortBy) =>
           set((state) => {

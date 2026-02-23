@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 export type Category = "BOOKS" | "DEV" | "CONTENT" | "DEVOPS";
 export type ColumnId = "todo" | "in-progress" | "done";
@@ -40,6 +39,9 @@ interface KanbanState {
   // Selectors
   getTotalCount: () => number;
   clearColumn: (columnId: ColumnId) => void;
+
+  resetKanban: () => void;
+  loadUserData: (email: string) => void;
 }
 
 const DEFAULT_COLUMNS: Column[] = [
@@ -100,59 +102,85 @@ const DEFAULT_COLUMNS: Column[] = [
 //   },
 // ];
 
-export const useKanbanStore = create<KanbanState>()(
-  persist(
-    (set, get) => ({
-      cards: [],
-      columns: DEFAULT_COLUMNS,
+const getUserCards = (email: string): Card[] => {
+  const raw = localStorage.getItem(`kanban-${email}`);
+  return raw ? JSON.parse(raw) : [];
+};
 
-      draggingCardId: null,
-      dragOverColumnId: null,
+const saveUserCards = (email: string, cards: Card[]) => {
+  localStorage.setItem(`kanban-${email}`, JSON.stringify(cards));
+};
 
-      addCard: (cardData) => {
-        const newCard: Card = {
-          ...cardData,
-          id: `c${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
-          createdAt: Date.now(),
-        };
-        set((state) => ({ cards: [...state.cards, newCard] }));
-      },
+export const useKanbanStore = create<KanbanState>()((set, get) => ({
+  cards: [],
+  columns: DEFAULT_COLUMNS,
 
-      removeCard: (cardId) => {
-        set((state) => ({ cards: state.cards.filter((c) => c.id !== cardId) }));
-      },
+  draggingCardId: null,
+  dragOverColumnId: null,
 
-      moveCard: (cardId, targetColumnId) => {
-        set((state) => ({
-          cards: state.cards.map((c) =>
-            c.id === cardId ? { ...c, columnId: targetColumnId } : c,
-          ),
-        }));
-      },
+  addCard: (cardData) => {
+    const newCard: Card = {
+      ...cardData,
+      id: `c${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+      createdAt: Date.now(),
+    };
+    set((state) => {
+      const cards = [...state.cards, newCard];
+      const email = localStorage.getItem("current-user"); // читаємо без імпорту store
+      if (email) saveUserCards(email, cards);
+      return { cards };
+    });
+  },
 
-      updateCard: (cardId, patch) => {
-        set((state) => ({
-          cards: state.cards.map((c) =>
-            c.id === cardId ? { ...c, ...patch } : c,
-          ),
-        }));
-      },
+  removeCard: (cardId) => {
+    set((state) => {
+      const cards = state.cards.filter((c) => c.id !== cardId);
+      const email = localStorage.getItem("current-user");
+      if (email) saveUserCards(email, cards);
+      return { cards };
+    });
+  },
 
-      setDraggingCard: (cardId) => set({ draggingCardId: cardId }),
-      setDragOverColumn: (columnId) => set({ dragOverColumnId: columnId }),
+  moveCard: (cardId, targetColumnId) => {
+    set((state) => {
+      const cards = state.cards.map((c) =>
+        c.id === cardId ? { ...c, columnId: targetColumnId } : c,
+      );
+      const email = localStorage.getItem("current-user");
+      if (email) saveUserCards(email, cards);
+      return { cards };
+    });
+  },
 
-      getTotalCount: () => get().cards.length,
+  updateCard: (cardId, patch) => {
+    set((state) => {
+      const cards = state.cards.map((c) =>
+        c.id === cardId ? { ...c, ...patch } : c,
+      );
+      const email = localStorage.getItem("current-user");
+      if (email) saveUserCards(email, cards);
+      return { cards };
+    });
+  },
 
-      clearColumn: (columnId) => {
-        set((state) => ({
-          cards: state.cards.filter((c) => c.columnId !== columnId),
-        }));
-      },
-    }),
-    {
-      name: "kanban-storage",
-      // drag state(перетягування) не зберігаємо в localStorage
-      partialize: (state) => ({ cards: state.cards, columns: state.columns }),
-    },
-  ),
-);
+  resetKanban: () => set({ cards: [] }),
+
+  loadUserData: (email) => {
+    const cards = getUserCards(email);
+    set({ cards });
+  },
+
+  setDraggingCard: (cardId) => set({ draggingCardId: cardId }),
+  setDragOverColumn: (columnId) => set({ dragOverColumnId: columnId }),
+
+  getTotalCount: () => get().cards.length,
+
+  clearColumn: (columnId) => {
+    set((state) => {
+      const cards = state.cards.filter((c) => c.columnId !== columnId);
+      const email = localStorage.getItem("current-user");
+      if (email) saveUserCards(email, cards);
+      return { cards };
+    });
+  },
+}));
