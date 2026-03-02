@@ -1,14 +1,10 @@
-import { memo, useEffect } from "react";
+import { memo } from "react";
 import { useNotionSearch } from "../../../../hooks/useNotionSearch";
 import { useFilteredCardsCount } from "../../../../hooks/useFilteredCardsCount";
 
 export const SearchInput = memo(() => {
   const { searchQuery, handleSearchChange } = useNotionSearch();
   const totalCardsCount = useFilteredCardsCount();
-
-  useEffect(() => {
-    console.log("🟡 SearchInput RENDERED, searchQuery:", searchQuery);
-  });
 
   return (
     <div className="relative w-full max-w-md mx-auto mb-6 group">

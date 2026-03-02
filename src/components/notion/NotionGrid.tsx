@@ -5,10 +5,6 @@ import { useFilteredCards } from "../../hooks/useFilteredCards";
 export const NotionGrid = memo(() => {
   const cards = useFilteredCards();
 
-  useEffect(() => {
-    console.log("🟢 NotionGrid RENDERED, cards count:", cards.length);
-  }, [cards.length]);
-
   return (
     <>
       {cards.length === 0 ? (
